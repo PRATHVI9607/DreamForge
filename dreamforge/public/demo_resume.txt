@@ -1,0 +1,35 @@
+ALEXANDER FORGE
+Senior Full Stack Architect | Distributed Systems Expert
+alex.forge@example.com | +1 (555) 000-1234 | San Francisco, CA
+
+SUMMARY
+Strategic technology leader with 8+ years of experience building scalable distributed systems and AI-powered applications. Expert in React, Next.js, Node.js, and Cloud Infrastructure. Proven track record of increasing system performance by 40% and leading multi-disciplinary engineering teams.
+
+EXPERIENCE
+Principal Software Engineer | TechSphere Solutions (2020 - Present)
+- Architected a multi-tenant SaaS platform using Next.js and Microservices, supporting 500k+ concurrent users.
+- Implemented real-time data processing pipelines using Redis and Kafka, reducing latency by 150ms.
+- Led the migration from monolithic architecture to AWS Lambda-based serverless stack, saving $200k/year in infrastructure costs.
+- Mentored a team of 15 engineers, establishing best practices for CI/CD and TDD.
+
+Senior Full Stack Developer | Innovate Web Corp (2017 - 2020)
+- Built enterprise-grade dashboards using React and D3.js for high-frequency trading data visualization.
+- Developed robust RESTful APIs using Node.js and PostgreSQL, ensuring high availability and fault tolerance.
+- Optimized database queries which improved reporting speed by 60%.
+
+Software Engineer | StartUp Ignition (2015 - 2017)
+- Developed responsive front-end components using React and Redux.
+- Managed deployments using Docker and Jenkins.
+
+SKILLS
+Frontend: React, Next.js, TypeScript, Tailwind CSS, Framer Motion, Redux, D3.js
+Backend: Node.js, Python, PostgreSQL, Redis, GraphQL, Go
+Cloud/DevOps: AWS (EC2, S3, Lambda, RDS), Docker, Kubernetes, Terraform, CI/CD
+AI/ML: OpenAI API, LangChain, Vector Databases (Pinecone, Supabase), basic PyTorch
+
+EDUCATION
+B.S. in Computer Science | Stanford University
+
+CERTIFICATIONS
+- AWS Certified Solutions Architect - Professional
+- Certified Kubernetes Administrator (CKA)

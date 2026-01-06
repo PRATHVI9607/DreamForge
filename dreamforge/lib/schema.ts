@@ -27,6 +27,9 @@ export const users = pgTable("user", {
     matchScore: integer("match_score").default(0),
     streak: integer("streak").default(0),
     goals: jsonb("goals"),
+    location: text("location"), // Region for job matching
+    professionalAnalysis: jsonb("professional_analysis"), // SWOT, Skill gaps, Level breakdown
+    careerInsights: jsonb("career_insights"), // What to do next, market value, trajectory
 })
 
 export const accounts = pgTable(
@@ -90,3 +93,16 @@ export const userSkills = pgTable("user_skills", {
 }, (table) => ({
     userSkillIdx: uniqueIndex("user_skill_idx").on(table.userId, table.skillId),
 }))
+
+export const jobs = pgTable("jobs", {
+    id: uuid("id").defaultRandom().primaryKey(),
+    title: text("title").notNull(),
+    company: text("company").notNull(),
+    location: text("location"),
+    salary: text("salary"),
+    description: text("description"),
+    logo: text("logo"),
+    requirements: jsonb("requirements"), // list of skill names
+    type: text("type"), // Full-time, Remote, etc.
+    postedAt: timestamp("posted_at").defaultNow(),
+})

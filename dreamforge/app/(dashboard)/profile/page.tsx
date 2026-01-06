@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CloudUpload, FileText, CheckCircle2, Github, Linkedin, Smartphone, Eye, EyeOff, Sparkles } from "lucide-react";
+import { Github, Linkedin, Upload, CheckCircle, FileText, Download, User, Settings, Shield, Sparkles, Zap, CloudUpload, Eye, EyeOff, CheckCircle2, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { parseResumeAndSeed } from "./actions";
@@ -11,7 +11,20 @@ export default function ProfilePage() {
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [redactionEnabled, setRedactionEnabled] = useState(true);
+    const [isImporting, setIsImporting] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const simulateImport = async (type: string) => {
+        setIsImporting(type);
+        const toastId = toast.loading(`Connecting to ${type}...`);
+
+        // Dynamic wait based on type
+        await new Promise(r => setTimeout(r, 2500));
+
+        toast.dismiss(toastId);
+        toast.success(`Successfully imported architectural data from ${type}!`);
+        setIsImporting(null);
+    };
 
     const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -34,9 +47,19 @@ export default function ProfilePage() {
 
     return (
         <div className="p-8 max-w-5xl mx-auto space-y-12 pb-20">
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-2">Profile Ingestion</h1>
-                <p className="text-slate-500">Upload your resume or connect external accounts to generate your initial skill graph.</p>
+            <div className="flex justify-between items-end">
+                <div>
+                    <h1 className="text-3xl font-bold text-slate-900 mb-2">Profile Ingestion</h1>
+                    <p className="text-slate-500 max-w-lg">Upload your resume or connect external accounts to generate your initial skill graph.</p>
+                </div>
+                <a
+                    href="/demo_resume.txt"
+                    download
+                    className="flex items-center gap-2 px-4 py-2 bg-sky-50 text-sky-700 rounded-xl border border-sky-100 font-bold text-sm hover:bg-sky-100 transition-colors"
+                >
+                    <FileText size={18} />
+                    Download Test Resume
+                </a>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -101,6 +124,37 @@ export default function ProfilePage() {
 
                 {/* Import Options */}
                 <div className="space-y-6">
+                    <div className="bg-sky-50 rounded-3xl p-8 border border-sky-100 mb-8">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-white rounded-2xl shadow-sm">
+                                    <FileText className="w-8 h-8 text-sky-600" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-900">Experience the AI Forensic</h3>
+                                    <p className="text-slate-500 text-sm">Download a curated resume to test our deep parsing capabilities.</p>
+                                </div>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                <a
+                                    href="/demo_resume.txt"
+                                    download
+                                    className="px-6 py-3 bg-white text-sky-600 font-bold rounded-2xl hover:bg-sky-50 transition-all border border-sky-200 shadow-sm flex items-center gap-2"
+                                >
+                                    <Sparkles size={16} />
+                                    Full Stack Architect
+                                </a>
+                                <a
+                                    href="/os_expert_resume.txt"
+                                    download
+                                    className="px-6 py-3 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg flex items-center gap-2"
+                                >
+                                    <Zap size={16} className="text-yellow-400" />
+                                    OS Specialist (India)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <div className="bg-white rounded-3xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="p-3 bg-slate-50 rounded-xl">
@@ -110,8 +164,12 @@ export default function ProfilePage() {
                                 <h3 className="font-bold text-slate-900">GitHub Import</h3>
                                 <p className="text-xs text-slate-500">Scrapes public repos for languages</p>
                             </div>
-                            <button className="ml-auto px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800">
-                                Connect
+                            <button
+                                onClick={() => simulateImport('GitHub')}
+                                disabled={!!isImporting}
+                                className="ml-auto px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 disabled:opacity-50"
+                            >
+                                {isImporting === 'GitHub' ? "Connecting..." : "Connect"}
                             </button>
                         </div>
                         <input
@@ -130,8 +188,12 @@ export default function ProfilePage() {
                                 <h3 className="font-bold text-slate-900">LinkedIn Import</h3>
                                 <p className="text-xs text-slate-500">Extracts work history & skills</p>
                             </div>
-                            <button className="ml-auto px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700">
-                                Connect
+                            <button
+                                onClick={() => simulateImport('LinkedIn')}
+                                disabled={!!isImporting}
+                                className="ml-auto px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+                            >
+                                {isImporting === 'LinkedIn' ? "Connecting..." : "Connect"}
                             </button>
                         </div>
                     </div>

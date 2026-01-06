@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Network, Map as MapIcon, User, FlaskConical, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, FileText } from "lucide-react";
+import { Network, Map as MapIcon, User, FlaskConical, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, FileText, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
@@ -13,6 +13,7 @@ const sidebarItems = [
     { name: "Career Map", href: "/map", icon: MapIcon },
     { name: "Skill Tree", href: "/tree", icon: Network },
     { name: "AI Coach", href: "/interview", icon: User },
+    { name: "Opportunity", href: "/jobs", icon: Briefcase },
     { name: "Design Lab", href: "/lab", icon: FlaskConical },
     { name: "Profile", href: "/profile", icon: FileText },
 ];

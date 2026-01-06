@@ -1,0 +1,49 @@
+ARJUN SHARMA
+Bengaluru, Karnataka, India | arjun.sharma@email.com | +91 98765 43210
+LinkedIn: linkedin.com/in/arjun-os-expert | GitHub: github.com/arjun-systems
+
+EXECUTIVE SUMMARY
+Senior Systems Architect & Operating Systems Specialist with 8+ years of experience in Linux Kernel development, low-level systems programming, and large-scale distributed system design. Proven track record in optimizing kernel performance for high-throughput financial systems and architecting resilient infrastructure.
+
+CORE COMPETENCIES
+- Systems Programming: C, C++, Rust, Assembly (x86_64, ARM)
+- Operating Systems: Linux Kernel Development, RTOS, Unix Internals, eBPF
+- System Design: Distributed Systems, Scalability, High Availability, Microservices
+- Low-level: Memory Management, Concurrency, Virtualization (KVM/QEMU), File Systems
+- Networking: TCP/IP Stack, DPDK, RDMA, Network Protocols
+
+PROFESSIONAL EXPERIENCE
+
+Lead Systems Engineer | TechScale Solutions, Bengaluru
+Jan 2021 – Present
+- Lead the architectural design of a custom low-latency execution engine, reducing trade processing time by 40%.
+- Developed custom eBPF programs for real-time network monitoring and security filtering at the kernel level.
+- Optimized Memory Management Unit (MMU) configurations for high-performance computing clusters.
+- Mentored a team of 10+ engineers on advanced C++ and systems design principles.
+
+Senior Software Engineer (Systems) | GlobalKernel Corp, Hyderabad
+July 2017 – Dec 2020
+- Contributed to the upstream Linux Kernel in the area of CPU scheduling and process management.
+- Designed and implemented a proprietary distributed file system for cloud storage, ensuring POSIX compliance.
+- Reduced system boot time by 30% for embedded Linux devices through init process optimization.
+- Scaled backend services from 10k to 500k concurrent requests using advanced load balancing and caching strategies.
+
+Software Engineer | Innovate Systems, Pune
+June 2015 – June 2017
+- Developed driver modules for various networking hardware components.
+- Performed rigorous debugging using GDB, Valgrind, and Strace for memory leak detection.
+- Built a micro-kernel prototype for specialized IoT applications.
+
+PROJECTS
+- HyperLink-FS: A high-performance distributed file system written in Rust, focusing on zero-copy data transfers.
+- Kernel-Trace-AI: An AI-driven anomaly detection system that analyzes Linux Kernel tracepoints for performance bottlenecks.
+- SystemDesign-Mastery: A curated collection of architectural patterns for building billionaire-user scale applications.
+
+EDUCATION
+Bachelor of Technology in Computer Science
+Indian Institute of Technology (IIT), Bombay | 2015
+
+CERTIFICATIONS & AWARDS
+- Linux Foundation Certified Engineer (LFCE)
+- AWS Certified Solutions Architect – Professional
+- 1st Place - National Level Systems Programming Hackathon 2014

@@ -19,7 +19,24 @@ The nerve center of your professional evolution.
 ### 🌌 **Skill Orb Constellation**
 A futuristic, interactive visualization of your technical depth.
 - **Dynamic Skill Trees**: Zoom, pan, and explore your competencies as a glowing orb network.
+- **Course Recommendations**: Every skill node now suggests premium courses to help you level up.
 - **Automatic Ingestion**: Upload your resume, and Sage AI will automatically map your skills into the constellation.
+
+### 💼 **Opportunity Forge (Job Matching)**
+The ultimate job recommendation engine.
+- **AI-Matched Roles**: Discover roles specifically curated for your unique skill constellation.
+- **Architecture Alignment**: See exactly which gaps are preventing you from reaching a 100% match.
+- **Market Value Insights**: Real-time salary analysis for your projected growth.
+
+### 🧪 **Architecture Lab**
+Experimental simulators for long-term career planning.
+- **What-If Simulator**: Project your salary and level 10 years into the future based on specialization choices.
+- **Career Branching**: (Coming Soon) Compare IC vs. Management tracks side-by-side.
+
+### 🤖 **Sage AI Coach**
+Your personal career architect powered by Llama 3.3.
+- **Context-Aware Advice**: Sage knows your level and match score, providing tailored guidance.
+- **Deep Insights**: From resume optimization to interview strategies.
 
 ### 🚇 **Career Metro Map**
 Visualize your professional trajectory like a subway navigation system.
