@@ -13,41 +13,58 @@ export async function fetchRealTimeJobs(query?: string) {
     const analysis = (userData?.professionalAnalysis as any);
     const targetRoles = analysis?.targetRoles || [];
     const currentRole = userData?.currentRole || "";
-    const userLocation = userData?.location || "";
-    const app_id = "c2c4030c";
-    const app_key = "f0b879a27f8e0989152d7bcd442b40f6";
+    const userLocation = userData?.location || "Remote";
 
     try {
-        // Construct Adzuna India Search URL
-        const queryTerm = query || targetRoles[0] || currentRole || "Software Engineer";
-        const locationTerm = userLocation || "India";
-        const adzunaUrl = `https://api.adzuna.com/v1/api/jobs/in/search/1?app_id=${app_id}&app_key=${app_key}&results_per_page=30&what=${encodeURIComponent(queryTerm)}&where=${encodeURIComponent(locationTerm)}&content-type=application/json`;
-
-        const response = await fetch(adzunaUrl);
-        if (!response.ok) throw new Error("Adzuna API Error");
-
+        const response = await fetch("https://www.arbeitnow.com/api/job-board-api");
         const data = await response.json();
-        const rawJobs = data.results || [];
+        let rawJobs = data.data || [];
 
-        const topJobs = rawJobs.map((j: any) => {
-            let matchScore = 75;
+        // Regional Filtering Logic
+        if (userLocation && userLocation.toLowerCase() !== "remote") {
+            const regionalJobs = rawJobs.filter((j: any) =>
+                j.location.toLowerCase().includes(userLocation.toLowerCase())
+            );
+            // If we have regional jobs, prioritize them
+            if (regionalJobs.length > 0) {
+                rawJobs = [...regionalJobs, ...rawJobs.filter((j: any) => !regionalJobs.includes(j))];
+            }
+        }
+
+        const filteredJobs = query
+            ? rawJobs.filter((j: any) =>
+                j.title.toLowerCase().includes(query.toLowerCase()) ||
+                j.company_name.toLowerCase().includes(query.toLowerCase())
+            )
+            : rawJobs;
+
+        const topJobs = filteredJobs.slice(0, 30).map((j: any) => {
+            // Primitive but real-time matching logic
+            let matchScore = 70;
             const title = j.title.toLowerCase();
+            const jobLoc = j.location.toLowerCase();
 
             if (targetRoles.some((r: string) => title.includes(r.toLowerCase()))) matchScore += 15;
             if (currentRole && title.includes(currentRole.toLowerCase())) matchScore += 5;
+            if (j.remote) matchScore += 5;
+
+            // Regional Match Boost
+            if (userLocation && jobLoc.includes(userLocation.toLowerCase())) {
+                matchScore += 10;
+            }
 
             return {
-                id: j.id,
-                title: j.title.replace(/<\/?[^>]+(>|$)/g, ""), // Clean HTML tags
-                company: j.company.display_name,
-                location: j.location.display_name,
-                salary: j.salary_min ? `₹${(j.salary_min / 100000).toFixed(1)}L+` : "Competitive",
-                type: j.contract_type === "permanent" ? "Full-time" : "Contract",
+                id: j.slug,
+                title: j.title,
+                company: j.company_name,
+                location: j.location,
+                salary: j.salary || "Competitive",
+                type: j.remote ? "Remote" : "On-site",
                 match: Math.min(99, matchScore),
-                requirements: j.category.label.split(" ").slice(0, 3) || ["Systems", "Tech"],
-                logo: j.company.display_name.charAt(0),
-                color: "bg-indigo-600",
-                url: j.redirect_url
+                requirements: j.tags || ["System Design", "Distributed Systems"],
+                logo: j.company_name.charAt(0),
+                color: "bg-slate-900",
+                url: j.url
             };
         });
 

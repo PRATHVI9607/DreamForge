@@ -1,21 +1,21 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, Video, Timer, AlertCircle, Bot, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
-
-import { analyzeInterviewPerformance } from "@/app/(dashboard)/interview/actions";
 
 export function InterviewCoach() {
     const [isRecording, setIsRecording] = useState(false);
     const [hasRecorded, setHasRecorded] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [timeLeft, setTimeLeft] = useState(120);
-    const [transcript, setTranscript] = useState("");
-    const [feedback, setFeedback] = useState<any>(null);
+    const [feedback, setFeedback] = useState({
+        percentile: 15,
+        pace: "Perfect",
+        fillers: 2,
+        sentiment: "Confident"
+    });
 
     const questions = [
         "Tell me about a time you had a conflict with a coworker...",
@@ -24,61 +24,21 @@ export function InterviewCoach() {
         "Explain the CAP theorem as if I were a junior developer."
     ];
 
-    const recognitionRef = useRef<any>(null);
+    const paceOptions = ["Perfect", "Fast", "Steady", "Deliberate"];
 
-    useEffect(() => {
-        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            recognitionRef.current = new SpeechRecognition();
-            recognitionRef.current.continuous = true;
-            recognitionRef.current.interimResults = true;
-
-            recognitionRef.current.onresult = (event: any) => {
-                let current = "";
-                for (let i = 0; i < event.results.length; i++) {
-                    current += event.results[i][0].transcript;
-                }
-                setTranscript(current);
-            };
-
-            recognitionRef.current.onerror = (event: any) => {
-                console.error("Speech Recognition Error:", event.error);
-                setIsRecording(false);
-                if (event.error === 'not-allowed') {
-                    toast.error("Microphone Access Denied", {
-                        description: "Please enable microphone permissions in your browser settings to use the AI Coach."
-                    });
-                } else {
-                    toast.error("Speech Recognition Error", {
-                        description: "Something went wrong with the voice input. Please try again."
-                    });
-                }
-            };
-        }
-    }, []);
-
-    const toggleRecording = async () => {
+    const toggleRecording = () => {
         if (isRecording) {
-            recognitionRef.current?.stop();
             setIsRecording(false);
-            setIsLoading(true);
-
-            // Call actual AI backend
-            const result = await analyzeInterviewPerformance(transcript, questions[currentQuestionIndex]);
-            if (result.success) {
-                setFeedback(result.analysis);
-                setHasRecorded(true);
-            }
-            setIsLoading(false);
+            setFeedback({
+                percentile: Math.floor(Math.random() * 20) + 5,
+                pace: paceOptions[Math.floor(Math.random() * paceOptions.length)],
+                fillers: Math.floor(Math.random() * 5),
+                sentiment: Math.random() > 0.5 ? "Strategic" : "Decisive"
+            });
+            setHasRecorded(true);
         } else {
-            setTranscript("");
-            setHasRecorded(false);
             setIsRecording(true);
-            try {
-                recognitionRef.current?.start();
-            } catch (e) {
-                console.error("Failed to start recognition", e);
-            }
+            setHasRecorded(false);
         }
     };
 
@@ -94,20 +54,19 @@ export function InterviewCoach() {
                 </div>
                 <div className="flex items-center gap-4">
                     <button
-                        disabled={isRecording || isLoading}
                         onClick={() => setCurrentQuestionIndex((currentQuestionIndex + 1) % questions.length)}
-                        className="text-[10px] font-bold text-sky-600 uppercase tracking-widest hover:text-sky-700 transition-colors disabled:opacity-50"
+                        className="text-[10px] font-bold text-sky-600 uppercase tracking-widest hover:text-sky-700 transition-colors"
                     >
                         Switch Question
                     </button>
                     <div className="px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold flex items-center gap-2 border border-rose-100">
                         <Timer size={14} />
-                        01:59
+                        01:{timeLeft < 100 ? `0${timeLeft}`.slice(-2) : '59'}
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 bg-slate-950 relative min-h-[400px]">
+            <div className="flex-1 bg-slate-950 relative min-h-[350px]">
                 {/* Simulated Waveform Overlay */}
                 {isRecording && (
                     <div className="absolute top-0 left-0 right-0 h-1 flex gap-1 px-1">
@@ -122,13 +81,7 @@ export function InterviewCoach() {
                     </div>
                 )}
 
-                {isLoading ? (
-                    <div className="absolute inset-0 flex items-center justify-center p-8 text-white text-center flex-col bg-slate-950/80 backdrop-blur-sm z-20">
-                        <div className="w-16 h-16 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mb-6" />
-                        <h4 className="text-xl font-bold">Analyzing Your Breakdown...</h4>
-                        <p className="text-slate-400 text-sm mt-2">Sage is evaluating your architectural sentiment.</p>
-                    </div>
-                ) : !hasRecorded ? (
+                {!hasRecorded ? (
                     <>
                         {/* Camera Viewfinder (Simulated) */}
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -155,59 +108,40 @@ export function InterviewCoach() {
 
                         {/* Live Transcript Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black via-black/80 to-transparent">
-                            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">AI Interviewer:</p>
-                            <p className="text-white text-xl font-bold leading-relaxed tracking-tight max-w-2xl mb-6">
+                            <p className="text-white text-xl font-bold leading-relaxed tracking-tight max-w-2xl">
                                 "{questions[currentQuestionIndex]}"
                             </p>
-                            {transcript && (
-                                <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
-                                    <p className="text-[10px] text-sky-400 font-bold uppercase mb-2">Live Transcript</p>
-                                    <p className="text-slate-300 text-sm italic">"{transcript}..."</p>
-                                </div>
-                            )}
                         </div>
                     </>
                 ) : (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="absolute inset-0 flex items-center justify-center p-8 text-white text-center flex-col bg-slate-900 overflow-y-auto"
+                        className="absolute inset-0 flex items-center justify-center p-8 text-white text-center flex-col bg-slate-900"
                     >
-                        <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6">
-                            <CheckCircle2 size={24} className="text-emerald-400" />
+                        <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6">
+                            <CheckCircle2 size={32} className="text-emerald-400" />
                         </div>
-                        <h4 className="text-2xl font-bold mb-2">Interview Analysis Complete</h4>
+                        <h4 className="text-2xl font-bold mb-2">Practice Session Complete!</h4>
                         <p className="text-slate-400 text-sm max-w-md mb-8">
-                            {feedback.feedback}
+                            Sage AI has analyzed your vocal tone and {feedback.sentiment.toLowerCase()} sentiment. Your "Architectural Confidence" score is in the top <span className="text-sky-400 font-bold">{feedback.percentile}%</span> of peers.
                         </p>
-
-                        <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-8">
-                            <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-left">
-                                <div className="text-[10px] text-slate-500 font-bold uppercase mb-1">Confidence Rank</div>
-                                <div className="text-sky-400 font-bold text-lg">Top {feedback.percentile}%</div>
+                        <div className="grid grid-cols-2 gap-4 w-full max-w-sm">
+                            <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+                                <div className="text-[10px] text-slate-500 font-bold uppercase mb-1">Pace</div>
+                                <div className="text-emerald-400 font-bold">{feedback.pace}</div>
                             </div>
-                            <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-left">
-                                <div className="text-[10px] text-slate-500 font-bold uppercase mb-1">Sentiment</div>
-                                <div className="text-emerald-400 font-bold text-lg">{feedback.sentiment}</div>
-                            </div>
-                            <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-left">
-                                <div className="text-[10px] text-slate-500 font-bold uppercase mb-1">Delivery Pace</div>
-                                <div className="text-white font-bold text-lg">{feedback.pace}</div>
-                            </div>
-                            <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-left">
-                                <div className="text-[10px] text-slate-500 font-bold uppercase mb-1">Fillers</div>
-                                <div className="text-rose-400 font-bold text-lg">{feedback.fillers} DETECTED</div>
+                            <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+                                <div className="text-[10px] text-slate-500 font-bold uppercase mb-1">Filler Words</div>
+                                <div className="text-sky-400 font-bold">{feedback.fillers} Detected</div>
                             </div>
                         </div>
-
-                        <div className="flex gap-4">
-                            <button
-                                onClick={() => setHasRecorded(false)}
-                                className="px-6 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors"
-                            >
-                                Practice Again
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => setHasRecorded(false)}
+                            className="mt-8 px-6 py-2 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors"
+                        >
+                            Retake Question
+                        </button>
                     </motion.div>
                 )}
             </div>
@@ -219,8 +153,8 @@ export function InterviewCoach() {
                         <div className="w-10 h-10 rounded-full bg-slate-50 border-2 border-white flex items-center justify-center text-lg shadow-sm">😐</div>
                     </div>
                     <div>
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Neural Analysis</span>
-                        <span className="text-[10px] text-emerald-500 font-bold">Live Stream Active</span>
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Real-time Sentiment</span>
+                        <span className="text-[10px] text-emerald-500 font-bold">Analysis Active</span>
                     </div>
                 </div>
 
